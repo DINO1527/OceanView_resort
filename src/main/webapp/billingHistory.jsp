@@ -1,6 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%-- Inga ungal Billing Model matrum DAO-vai import pannungalk --%>
+<%-- 1. Inga ungal Model matrum DAO-vai import pannungalk --%>
+<%@ page import="com.oceanview.dao.BillingDAO" %>
+<%@ page import="com.oceanview.model.Billing" %>
+
+<%
+    // 2. Database-il irunthu data-vai fetch pannuvom
+    BillingDAO dao = new BillingDAO();
+    List<Billing> billList = dao.getAllInvoices(); // Intha method DAO-la irukkanum
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,13 +66,17 @@
             </tr>
             </thead>
             <tbody class="text-slate-300">
-            <%-- Inga loop moolamaaga data-vai fill pannunga (Sample Row Below) --%>
+            <%
+                // 3. Dynamic Data Loop
+                if(billList != null && !billList.isEmpty()) {
+                    for(Billing b : billList) {
+            %>
             <tr class="border-b border-white/5 hover:bg-white/5 transition-all">
-                <td class="p-6 text-blue-400 font-mono font-bold">INV-9901</td>
-                <td class="p-6 text-slate-400 font-mono">RES-104</td>
-                <td class="p-6 font-semibold text-white">S. i. Ramlan</td>
-                <td class="p-6 text-sm">2026-03-05</td>
-                <td class="p-6 font-bold text-emerald-400">LKR 45,500.00</td>
+                <td class="p-6 text-blue-400 font-mono font-bold"><%= b.getInvoiceId() %></td>
+                <td class="p-6 text-slate-400 font-mono"><%= b.getResId() %></td>
+                <td class="p-6 font-semibold text-white uppercase"><%= b.getGuestName() %></td>
+                <td class="p-6 text-sm"><%= b.getBillDate() %></td>
+                <td class="p-6 font-bold text-emerald-400">LKR <%= String.format("%,.2f", b.getTotalAmount()) %></td>
                 <td class="p-6 text-center">
                     <span class="bg-emerald-500/10 text-emerald-500 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-500/20">
                         Paid
@@ -72,18 +84,24 @@
                 </td>
                 <td class="p-6 text-center">
                     <div class="flex justify-center gap-5">
-                        <a href="viewInvoice?id=INV-9901" class="text-blue-400 hover:text-white transition-colors" title="Print Bill">
+                        <a href="generateInvoice.jsp?id=<%= b.getResId() %>" class="text-blue-400 hover:text-white transition-colors" title="Print Bill">
                             <i class="fas fa-print"></i>
                         </a>
-                        <a href="editInvoice.jsp?id=INV-9901" class="text-emerald-400 hover:text-emerald-300 transition-colors" title="Edit Bill">
+                        <a href="editInvoice.jsp?id=<%= b.getInvoiceId() %>" class="text-emerald-400 hover:text-emerald-300 transition-colors" title="Edit Bill">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <button onclick="confirmDeleteInvoice('INV-9901')" class="text-rose-400 hover:text-rose-300 transition-colors" title="Delete Bill">
+                        <button onclick="confirmDeleteInvoice('<%= b.getInvoiceId() %>')" class="text-rose-400 hover:text-rose-300 transition-colors" title="Delete Bill">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
                 </td>
             </tr>
+            <%
+                }
+            } else {
+            %>
+            <tr><td colspan="7" class="p-10 text-center text-slate-500 italic">No billing records found in database.</td></tr>
+            <% } %>
             </tbody>
         </table>
     </div>
@@ -103,12 +121,11 @@
             confirmButtonText: 'Yes, Delete'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Inga ungal Delete Servlet-ai call pannunga
-                window.location.href = 'deleteInvoice?id=' + id;
+                // Delete logic
+                window.location.href = 'deleteInvoiceServlet?id=' + id;
             }
         })
     }
 </script>
-
 </body>
 </html>
