@@ -18,6 +18,26 @@
         /* Modal Animation */
         .modal-active { display: flex !important; animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* Custom Transparent Scrollbar - Neenga kettapadi add panniyathu */
+        ::-webkit-scrollbar {
+            width: 6px; /* Scrollbar width slim-aa irukkum */
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; /* Track-ai transparent aakkiyacha */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(30, 41, 59, 0.2); /* Scroll handle mattum light-aa theriyum */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(30, 41, 59, 0.5); /* Hover pannumbothu mattum thookkala theriyum */
+        }
+
+        /* Sidebar Scrollbar (Optional: dark theme-kku etha maathiri) */
+        aside ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body class="bg-[#f8fafc] text-slate-900">
@@ -48,8 +68,7 @@
             <span class="text-[9px] tracking-[5px] text-blue-400 font-bold uppercase mt-2 block">Staff Portal</span>
         </div>
 
-        <nav class="flex-1 space-y-3 overflow-y-auto">
-            <div class="text-[10px] font-black text-slate-500 uppercase tracking-[3px] px-4 mb-4">Core Modules</div>
+        <nav class="flex-1 space-y-3 overflow-y-auto pr-2"> <div class="text-[10px] font-black text-slate-500 uppercase tracking-[3px] px-4 mb-4">Core Modules</div>
 
             <a href="dashboard.jsp" class="flex items-center p-4 bg-blue-600/20 text-blue-400 rounded-2xl border border-blue-500/20 font-bold">
                 <i class="fas fa-th-large mr-4"></i> Overview
@@ -91,6 +110,10 @@
             </div>
 
             <div class="flex items-center gap-6">
+                <a href="settings.jsp" class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition-all shadow-sm" title="Account Settings">
+                    <i class="fas fa-cog text-sm"></i>
+                </a>
+
                 <div class="text-right border-r pr-6 border-slate-200">
                     <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Authorized Admin</p>
                     <p class="text-sm font-bold text-blue-600"><%= session.getAttribute("user") != null ? session.getAttribute("user") : "Guest User" %></p>
@@ -174,17 +197,14 @@
 <script>
     const modal = document.getElementById('logoutModal');
 
-    // Shows the custom confirmation modal [cite: 2026-03-05]
     function openLogoutModal() {
         modal.classList.add('modal-active');
     }
 
-    // Hides the modal if Cancel is clicked [cite: 2026-03-05]
     function closeLogoutModal() {
         modal.classList.remove('modal-active');
     }
 
-    // Final logout action [cite: 2026-03-05]
     function proceedLogout() {
         window.location.href = "logout";
     }
