@@ -57,7 +57,7 @@ public class ReservationDAO {
         return list;
     }
 
-    // 3. EDIT prachinaiyai sari seiya: Specific ID moolam data edukka (NEW)
+    // 3. EDIT prachinaiyai sari seiya: Specific ID moolam data edukka (Existing)
     public Reservation getReservationByNo(String resNo) {
         Reservation res = null;
         String sql = "SELECT * FROM reservations WHERE res_no = ?";
@@ -82,5 +82,28 @@ public class ReservationDAO {
             e.printStackTrace();
         }
         return res;
+    }
+
+    // 4. Update Reservation details in database (NEW - Fixes the Service Error)
+    public boolean updateReservation(Reservation res) {
+        // SQL query to update details based on reservation number
+        String sql = "UPDATE reservations SET guest_name=?, contact_no=?, room_type=?, check_in=?, check_out=? WHERE res_no=?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, res.getGuestName());
+            stmt.setString(2, res.getContactNo());
+            stmt.setString(3, res.getRoomType());
+            stmt.setString(4, res.getCheckIn());
+            stmt.setString(5, res.getCheckOut());
+            stmt.setString(6, res.getResNo());
+
+            // Returns true if one or more rows were updated
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
