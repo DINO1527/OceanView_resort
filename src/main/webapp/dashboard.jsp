@@ -25,7 +25,7 @@
             <span class="text-[9px] tracking-[5px] text-blue-400 font-bold uppercase mt-2 block">Staff Portal</span>
         </div>
 
-        <nav class="flex-1 space-y-3">
+        <nav class="flex-1 space-y-3 overflow-y-auto">
             <div class="text-[10px] font-black text-slate-500 uppercase tracking-[3px] px-4 mb-4">Core Modules</div>
 
             <a href="dashboard.jsp" class="flex items-center p-4 bg-blue-600/20 text-blue-400 rounded-2xl border border-blue-500/20 font-bold">
@@ -40,9 +40,12 @@
                 <i class="fas fa-address-book mr-4 group-hover:text-blue-400"></i> Guest Directory
             </a>
 
-            <%-- UPDATED: Points to the new search form to enter Res ID --%>
             <a href="billing.jsp" class="flex items-center p-4 text-slate-400 hover:bg-white/5 hover:text-white rounded-2xl transition-all group">
                 <i class="fas fa-file-invoice-dollar mr-4 group-hover:text-blue-400"></i> Billing Engine
+            </a>
+
+            <a href="billingHistory.jsp" class="flex items-center p-4 text-slate-400 hover:bg-white/5 hover:text-white rounded-2xl transition-all group">
+                <i class="fas fa-history mr-4 group-hover:text-emerald-400"></i> Billing History
             </a>
 
             <a href="help.jsp" class="flex items-center p-4 text-slate-400 hover:bg-white/5 hover:text-white rounded-2xl transition-all group">
@@ -81,38 +84,48 @@
                 <p class="text-slate-500 mt-3 text-lg">Seamlessly manage guest lifecycle from check-in to final settlement.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                <a href="Reservation.jsp" class="bg-white p-10 rounded-[45px] shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
-                    <div class="w-16 h-16 bg-blue-50 rounded-3xl flex items-center justify-center text-blue-600 mb-8 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
-                        <i class="fas fa-plus-circle text-2xl"></i>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8">
+                <a href="Reservation.jsp" class="bg-white p-8 rounded-[40px] shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
+                        <i class="fas fa-plus-circle text-xl"></i>
                     </div>
-                    <h3 class="text-xl font-black text-slate-800 mb-4">Add Reservation</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed mb-8">Store guest details, room types, and check-in/out dates securely.</p>
-                    <div class="flex items-center text-blue-600 font-black text-xs uppercase tracking-widest">
-                        Initialize Booking <i class="fas fa-arrow-right ml-3 group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </a>
-
-                <a href="ViewReservations.jsp" class="bg-white p-10 rounded-[45px] shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
-                    <div class="w-16 h-16 bg-indigo-50 rounded-3xl flex items-center justify-center text-indigo-600 mb-8 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">
-                        <i class="fas fa-magnifying-glass-chart text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-black text-slate-800 mb-4">View Details</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed mb-8">Retrieve comprehensive guest information via Reservation ID.</p>
-                    <div class="flex items-center text-indigo-600 font-black text-xs uppercase tracking-widest">
-                        Open Directory <i class="fas fa-arrow-right ml-3 group-hover:translate-x-2 transition-transform"></i>
+                    <h3 class="text-lg font-black text-slate-800 mb-2">Add Reservation</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed mb-6">Store guest details and room types securely.</p>
+                    <div class="flex items-center text-blue-600 font-black text-[10px] uppercase tracking-widest">
+                        Initialize <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                     </div>
                 </a>
 
-                <%-- UPDATED: Redirects to the search form where you input Res ID manually --%>
-                <a href="billing.jsp" class="bg-white p-10 rounded-[45px] shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
-                    <div class="w-16 h-16 bg-emerald-50 rounded-3xl flex items-center justify-center text-emerald-600 mb-8 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-500">
-                        <i class="fas fa-receipt text-2xl"></i>
+                <a href="ViewReservations.jsp" class="bg-white p-8 rounded-[40px] shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">
+                        <i class="fas fa-magnifying-glass-chart text-xl"></i>
                     </div>
-                    <h3 class="text-xl font-black text-slate-800 mb-4">Billing & Invoicing</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed mb-8">Compute stay costs and generate professional invoice reports.</p>
-                    <div class="flex items-center text-emerald-600 font-black text-xs uppercase tracking-widest">
-                        Generate Bill <i class="fas fa-arrow-right ml-3 group-hover:translate-x-2 transition-transform"></i>
+                    <h3 class="text-lg font-black text-slate-800 mb-2">View Details</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed mb-6">Retrieve guest info via Reservation ID.</p>
+                    <div class="flex items-center text-indigo-600 font-black text-[10px] uppercase tracking-widest">
+                        Directory <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </a>
+
+                <a href="billing.jsp" class="bg-white p-8 rounded-[40px] shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-500">
+                        <i class="fas fa-receipt text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-black text-slate-800 mb-2">Billing Engine</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed mb-6">Compute costs and generate invoices.</p>
+                    <div class="flex items-center text-emerald-600 font-black text-[10px] uppercase tracking-widest">
+                        Process Bill <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </a>
+
+                <a href="billingHistory.jsp" class="bg-white p-8 rounded-[40px] shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-600 mb-6 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500">
+                        <i class="fas fa-history text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-black text-slate-800 mb-2">Billing History</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed mb-6">Archive of all past invoices and settlements.</p>
+                    <div class="flex items-center text-slate-900 font-black text-[10px] uppercase tracking-widest">
+                        View Records <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
                     </div>
                 </a>
             </div>

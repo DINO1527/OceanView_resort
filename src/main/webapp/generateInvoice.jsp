@@ -36,8 +36,9 @@
 
     double totalStayCost = (double) nights * pricePerNight;
 
-    // 3. Save to DB
+    // 3. Save to DB (Intha line thaan History-kku data-vai anuppum)
     BillingDAO billDao = new BillingDAO();
+    // Ippo saveInvoice call aagum pothu Billing History table-il record insert aagum
     billDao.saveInvoice(resId, res.getGuestName(), nights, totalStayCost);
 %>
 
@@ -98,7 +99,7 @@
                         <p class="text-sm font-bold text-slate-800"><%= res.getCheckOut() %></p>
                     </div>
                 </div>
-                <p class="text-sm font-black text-slate-900 tracking-tighter uppercase"><%= nights %> Total Nights Stayed</p>
+                <p class="text-sm font-black text-slate-900 tracking-tighter uppercase text-right"><%= nights %> Total Nights Stayed</p>
             </div>
         </div>
 
