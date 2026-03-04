@@ -2,39 +2,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Billing Engine | Ocean View</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Portal | Ocean View</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        /* Matching the Reservation Form Background */
+        .hero-bg {
+            background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)),
+            url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        /* Matching Glass Panel Style */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+        }
+        /* Matching Input Style */
+        .input-field {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: #2563eb;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+    </style>
 </head>
-<body class="bg-slate-900 min-h-screen flex items-center justify-center p-6">
+<body class="hero-bg min-h-screen flex items-center justify-center p-8">
 
-<div class="max-w-md w-full bg-white rounded-[40px] p-10 shadow-2xl">
-    <div class="text-center mb-10">
-        <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-6 text-3xl">
-            <i class="fas fa-file-invoice-dollar"></i>
-        </div>
-        <h2 class="text-3xl font-black text-slate-800 tracking-tight">Billing Engine</h2>
-        <p class="text-slate-500 mt-2">Enter Reservation ID to generate invoice</p>
+<div class="w-full max-w-lg">
+    <div class="mb-6">
+        <a href="dashboard.jsp" class="inline-flex items-center text-blue-400 hover:text-white transition-all text-[10px] font-black uppercase tracking-[2px]">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+        </a>
     </div>
 
-    <form action="generateInvoice.jsp" method="GET" class="space-y-6">
-        <div>
-            <label class="block text-xs font-black uppercase tracking-widest text-slate-400 mb-3 ml-1">Reservation ID</label>
-            <div class="relative">
-                <i class="fas fa-hashtag absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" name="id" placeholder="e.g. RES-001" required
-                       class="w-full pl-12 pr-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-emerald-500 focus:ring-0 transition-all outline-none font-bold text-slate-700">
+    <div class="glass-panel p-10 md:p-14 shadow-2xl">
+        <div class="text-center mb-10">
+            <div class="w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-blue-600/30">
+                <i class="fas fa-file-invoice-dollar text-blue-400 text-2xl"></i>
             </div>
+            <h1 class="text-2xl text-white uppercase tracking-widest font-bold">Billing Portal</h1>
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[2px] mt-2">Generate Guest Ledger</p>
         </div>
 
-        <button type="submit" class="w-full bg-emerald-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-emerald-700 shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-3">
-            Generate Invoice <i class="fas fa-arrow-right"></i>
-        </button>
+        <form action="generateInvoice.jsp" method="GET" class="space-y-8">
+            <div class="space-y-3">
+                <label class="text-xs text-slate-500 uppercase font-bold ml-1">Reservation Identifier</label>
+                <div class="relative">
+                    <i class="fas fa-hashtag absolute left-5 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                    <input type="text" name="id" placeholder="RES-000" required
+                           class="input-field w-full pl-12 pr-6 py-4 rounded-xl font-semibold placeholder:text-slate-600">
+                </div>
+            </div>
 
-        <a href="dashboard.jsp" class="block text-center text-slate-400 font-bold text-sm hover:text-slate-600 transition-all mt-4">
-            Back to Dashboard
-        </a>
-    </form>
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold p-4 rounded-2xl hover:bg-blue-500 transition-all uppercase tracking-widest active:scale-95 shadow-lg shadow-blue-600/20">
+                Pull Records <i class="fas fa-chevron-right ml-2 text-xs"></i>
+            </button>
+        </form>
+
+        <div class="mt-10 pt-8 border-t border-white/5 flex justify-center">
+            <a href="viewReservations.jsp" class="text-slate-500 hover:text-blue-400 font-bold text-[10px] uppercase tracking-widest transition-all">
+                <i class="fas fa-list mr-2"></i> View Recent Reservations
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-8 flex justify-center items-center gap-4 opacity-30">
+        <div class="flex items-center gap-2 text-[9px] font-bold text-white uppercase tracking-widest">
+            <i class="fas fa-shield-alt text-blue-500"></i> SSL Secure
+        </div>
+        <div class="w-1 h-1 bg-slate-600 rounded-full"></div>
+        <div class="flex items-center gap-2 text-[9px] font-bold text-white uppercase tracking-widest">
+            <i class="fas fa-database text-blue-500"></i> Real-time Sync
+        </div>
+    </div>
 </div>
 
 </body>
