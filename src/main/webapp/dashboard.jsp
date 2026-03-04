@@ -14,9 +14,32 @@
         .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
         .card-hover:hover { transform: translateY(-8px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); }
         .brand-font { font-family: 'Cinzel', serif; letter-spacing: 4px; }
+
+        /* Modal Animation */
+        .modal-active { display: flex !important; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body class="bg-[#f8fafc] text-slate-900">
+
+<div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-[32px] shadow-2xl max-w-sm w-full p-8 text-center border border-slate-100">
+        <div class="w-20 h-20 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-sign-out-alt text-3xl"></i>
+        </div>
+        <h3 class="text-2xl font-black text-slate-900 mb-2">Confirm Exit</h3>
+        <p class="text-slate-500 mb-8 leading-relaxed">Are you sure you want to log out from the Staff Portal?</p>
+
+        <div class="flex gap-4">
+            <button onclick="closeLogoutModal()" class="flex-1 py-4 px-6 rounded-2xl bg-slate-100 text-slate-600 font-bold hover:bg-slate-200 transition-all uppercase tracking-widest text-[10px]">
+                Cancel
+            </button>
+            <button onclick="proceedLogout()" class="flex-1 py-4 px-6 rounded-2xl bg-rose-500 text-white font-bold hover:bg-rose-600 shadow-lg shadow-rose-200 transition-all uppercase tracking-widest text-[10px]">
+                Yes, Exit
+            </button>
+        </div>
+    </div>
+</div>
 
 <div class="flex h-screen overflow-hidden">
     <aside class="w-72 sidebar-gradient text-white flex flex-col p-6 shadow-2xl">
@@ -54,7 +77,7 @@
         </nav>
 
         <div class="pt-6 border-t border-white/5 mt-auto">
-            <a href="logout" class="flex items-center p-4 text-rose-400 hover:bg-rose-500/10 rounded-2xl transition-all font-bold">
+            <a href="javascript:void(0);" onclick="openLogoutModal()" class="flex items-center p-4 text-rose-400 hover:bg-rose-500/10 rounded-2xl transition-all font-bold">
                 <i class="fas fa-door-open mr-4"></i> Exit System
             </a>
         </div>
@@ -147,6 +170,25 @@
         </div>
     </main>
 </div>
+
+<script>
+    const modal = document.getElementById('logoutModal');
+
+    // Shows the custom confirmation modal [cite: 2026-03-05]
+    function openLogoutModal() {
+        modal.classList.add('modal-active');
+    }
+
+    // Hides the modal if Cancel is clicked [cite: 2026-03-05]
+    function closeLogoutModal() {
+        modal.classList.remove('modal-active');
+    }
+
+    // Final logout action [cite: 2026-03-05]
+    function proceedLogout() {
+        window.location.href = "logout";
+    }
+</script>
 
 </body>
 </html>
