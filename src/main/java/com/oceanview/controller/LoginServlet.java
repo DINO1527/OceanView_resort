@@ -33,9 +33,14 @@ public class LoginServlet extends HttpServlet {
 
             // Success: Create session
             HttpSession session = request.getSession();
+
+            // --- FIXED: Ungal Staff model-il getFullName() iruppathaal athaiye payanpaduththi ullen ---
+            // Intha "user" attribute thaan dashboard-il peyarai kaatta udhavum.
+            session.setAttribute("user", loggedInStaff.getFullName());
+
             session.setAttribute("staffUser", loggedInStaff);
 
-            // Redirect to a secure dashboard (you will create this later)
+            // Redirect to a secure dashboard
             response.sendRedirect(request.getContextPath() + "/dashboard.jsp");
 
         } catch (IllegalArgumentException e) {
