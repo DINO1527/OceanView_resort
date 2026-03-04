@@ -36,11 +36,11 @@
                 <i class="fas fa-calendar-plus mr-4 group-hover:text-blue-400"></i> Add Reservation
             </a>
 
-            <%-- Changed link from view-details.jsp to ViewReservations.jsp --%>
             <a href="ViewReservations.jsp" class="flex items-center p-4 text-slate-400 hover:bg-white/5 hover:text-white rounded-2xl transition-all group">
                 <i class="fas fa-address-book mr-4 group-hover:text-blue-400"></i> Guest Directory
             </a>
 
+            <%-- UPDATED: Points to the new search form to enter Res ID --%>
             <a href="billing.jsp" class="flex items-center p-4 text-slate-400 hover:bg-white/5 hover:text-white rounded-2xl transition-all group">
                 <i class="fas fa-file-invoice-dollar mr-4 group-hover:text-blue-400"></i> Billing Engine
             </a>
@@ -93,7 +93,6 @@
                     </div>
                 </a>
 
-                <%-- Changed link from view-details.jsp to ViewReservations.jsp --%>
                 <a href="ViewReservations.jsp" class="bg-white p-10 rounded-[45px] shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
                     <div class="w-16 h-16 bg-indigo-50 rounded-3xl flex items-center justify-center text-indigo-600 mb-8 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">
                         <i class="fas fa-magnifying-glass-chart text-2xl"></i>
@@ -105,6 +104,7 @@
                     </div>
                 </a>
 
+                <%-- UPDATED: Redirects to the search form where you input Res ID manually --%>
                 <a href="billing.jsp" class="bg-white p-10 rounded-[45px] shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
                     <div class="w-16 h-16 bg-emerald-50 rounded-3xl flex items-center justify-center text-emerald-600 mb-8 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-500">
                         <i class="fas fa-receipt text-2xl"></i>
