@@ -1,111 +1,119 @@
+<%@ page import="com.oceanview.dao.ReservationDAO" %>
+<%@ page import="com.oceanview.model.Reservation" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.oceanview.model.Reservation, com.oceanview.dao.ReservationDAO, com.oceanview.service.BillingService" %>
+<%
+    String resId = request.getParameter("id");
+    ReservationDAO dao = new ReservationDAO();
+    Reservation res = dao.getReservationByNo(resId);
+
+    // Error Handling
+    if (res == null) {
+        out.println("<script>alert('Reservation ID Not Found!'); window.location='billing.jsp';</script>");
+        return;
+    }
+
+    // 1. Calculate Nights Stayed (ChronoUnit uses java.time)
+    java.time.LocalDate checkIn = java.time.LocalDate.parse(res.getCheckIn());
+    java.time.LocalDate checkOut = java.time.LocalDate.parse(res.getCheckOut());
+    long nights = java.time.temporal.ChronoUnit.DAYS.between(checkIn, checkOut);
+
+    if(nights <= 0) nights = 1; // Minimum 1 night charge
+
+    // 2. Room Rates Logic (Based on your requirements)
+    double pricePerNight = 0;
+    String roomType = res.getRoomType().toLowerCase();
+
+    if(roomType.contains("single")) {
+        pricePerNight = 5500.00;
+    } else if(roomType.contains("double")) {
+        pricePerNight = 9000.00;
+    } else if(roomType.contains("luxury") || roomType.contains("suite")) {
+        pricePerNight = 18000.00;
+    } else {
+        pricePerNight = 7500.00; // Default Standard Rate
+    }
+
+    double totalStayCost = nights * pricePerNight;
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Invoice | Ocean View Resort</title>
+    <title>Invoice | <%= resId %></title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @media print {
-            .no-print { display: none; }
-            body { background: white; p: 0; }
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-900 min-h-screen p-4 md:p-10">
+<body class="bg-slate-50 p-6 md:p-12">
 
-<%
-    String resNo = request.getParameter("id");
-    ReservationDAO dao = new ReservationDAO();
-    Reservation res = dao.getReservationByNo(resNo); //
-
-    if (res != null) {
-        BillingService billingService = new BillingService();
-
-        // Calculating Stay Details
-        long nights = billingService.getNumberOfNights(res.getCheckIn(), res.getCheckOut());
-        double totalCost = billingService.calculateTotalCost(res.getCheckIn(), res.getCheckOut(), res.getRoomType());
-        double pricePerNight = totalCost / nights;
-%>
-
-<div class="max-w-4xl mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl">
-    <div class="bg-blue-600 p-8 text-white flex justify-between items-center">
+<div class="max-w-3xl mx-auto bg-white rounded-[45px] shadow-2xl border border-slate-100 overflow-hidden">
+    <div class="bg-slate-900 p-10 text-white flex justify-between items-center">
         <div>
-            <h1 class="text-4xl font-black tracking-tighter italic">OCEAN VIEW</h1>
-            <p class="text-blue-100 text-sm">Galle, Sri Lanka</p>
+            <h1 class="text-3xl font-black tracking-tighter uppercase">Ocean View Resort</h1>
+            <p class="text-blue-400 text-[10px] font-black tracking-[4px] uppercase mt-2">Operational Excellence | Galle</p>
         </div>
         <div class="text-right">
-            <h2 class="text-2xl font-bold uppercase">Invoice</h2>
-            <p class="opacity-80 text-sm">#INV-<%= res.getResNo() %></p>
+            <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest">Res ID</p>
+            <p class="text-xl font-bold">#<%= resId %></p>
         </div>
     </div>
 
-    <div class="p-10">
-        <div class="grid grid-cols-2 gap-10 mb-10 border-b pb-10 border-slate-100">
+    <div class="p-12">
+        <div class="grid grid-cols-2 gap-10 mb-12 border-b border-slate-50 pb-10">
             <div>
-                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">Bill To</h3>
-                <p class="text-xl font-bold text-slate-800"><%= res.getGuestName() %></p>
-                <p class="text-slate-500"><%= res.getContactNo() %></p>
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Bill To</h3>
+                <p class="text-xl font-bold text-slate-800"><%= res.getName() %></p>
+                <p class="text-slate-500 text-sm mt-1 italic"><%= res.getRoomType() %> Room Selection</p>
             </div>
             <div class="text-right">
-                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">Stay Period</h3>
-                <p class="text-slate-800 font-semibold"><%= res.getCheckIn() %> to <%= res.getCheckOut() %></p>
-                <p class="text-blue-600 font-bold"><%= nights %> Night(s)</p>
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Duration</h3>
+                <p class="text-sm font-bold text-slate-800"><%= res.getCheckIn() %> <i class="fas fa-arrow-right mx-2 text-blue-400 text-[10px]"></i> <%= res.getCheckOut() %></p>
+                <p class="text-blue-600 font-black text-xs mt-2 uppercase tracking-tighter"><%= nights %> Nights Total Stay</p>
             </div>
         </div>
 
         <table class="w-full mb-10">
             <thead>
             <tr class="text-left border-b-2 border-slate-100">
-                <th class="py-4 text-slate-400 text-xs font-bold uppercase tracking-widest">Description</th>
-                <th class="py-4 text-slate-400 text-xs font-bold uppercase tracking-widest text-center">Nights</th>
-                <th class="py-4 text-slate-400 text-xs font-bold uppercase tracking-widest text-right">Rate (LKR)</th>
-                <th class="py-4 text-slate-400 text-xs font-bold uppercase tracking-widest text-right">Total</th>
+                <th class="pb-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Stay Description</th>
+                <th class="pb-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Nightly Rate</th>
+                <th class="pb-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Total (LKR)</th>
             </tr>
             </thead>
-            <tbody>
-            <tr class="border-b border-slate-50">
-                <td class="py-6 font-bold text-slate-700">Room Accommodation (<%= res.getRoomType() %>)</td>
-                <td class="py-6 text-center text-slate-600"><%= nights %></td>
-                <td class="py-6 text-right text-slate-600"><%= String.format("%,.2f", pricePerNight) %></td>
-                <td class="py-6 text-right font-bold text-slate-800"><%= String.format("%,.2f", totalCost) %></td>
+            <tbody class="divide-y divide-slate-50">
+            <tr>
+                <td class="py-8">
+                    <p class="font-bold text-slate-800">Accommodation & Services</p>
+                    <p class="text-xs text-slate-400 mt-1">Room: <%= res.getRoomType() %></p>
+                </td>
+                <td class="py-8 text-center font-bold text-slate-600">LKR <%= String.format("%,.2f", pricePerNight) %></td>
+                <td class="py-8 text-right font-black text-slate-900">LKR <%= String.format("%,.2f", totalStayCost) %></td>
             </tr>
             </tbody>
         </table>
 
-        <div class="flex justify-end">
-            <div class="w-full max-w-xs space-y-3">
-                <div class="flex justify-between text-slate-500">
-                    <span>Subtotal</span>
-                    <span><%= String.format("%,.2f", totalCost) %></span>
+        <div class="bg-slate-900 rounded-[30px] p-8 flex justify-end text-white">
+            <div class="w-72 space-y-4">
+                <div class="flex justify-between items-center text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    <span>Net Total</span>
+                    <span>LKR <%= String.format("%,.2f", totalStayCost) %></span>
                 </div>
-                <div class="flex justify-between text-slate-500">
-                    <span>Service Tax (0%)</span>
-                    <span>0.00</span>
-                </div>
-                <div class="flex justify-between text-2xl font-black text-blue-600 pt-3 border-t">
-                    <span>TOTAL</span>
-                    <span>LKR <%= String.format("%,.2f", totalCost) %></span>
+                <div class="flex justify-between items-center pt-4 border-t border-white/10">
+                    <span class="text-lg font-bold tracking-tight">Grand Total</span>
+                    <span class="text-2xl font-black text-blue-400">LKR <%= String.format("%,.2f", totalStayCost) %></span>
                 </div>
             </div>
         </div>
 
-        <div class="mt-20 pt-10 border-t border-slate-100 flex justify-between items-center no-print">
-            <p class="text-slate-400 text-sm italic">Thank you for choosing Ocean View Resort.</p>
-            <div class="flex gap-4">
-                <button onclick="window.print()" class="bg-slate-800 text-white px-8 py-3 rounded-xl font-bold hover:bg-slate-700 transition-all">Print Invoice</button>
-                <a href="ViewReservations.jsp" class="bg-blue-100 text-blue-600 px-8 py-3 rounded-xl font-bold hover:bg-blue-200 transition-all">Close</a>
-            </div>
+        <div class="mt-12 flex gap-5 no-print">
+            <button onclick="window.print()" class="flex-1 bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-blue-700 transition-all flex items-center justify-center gap-3">
+                <i class="fas fa-print"></i> Print Invoice
+            </button>
+            <a href="billing.jsp" class="flex-1 bg-slate-100 text-slate-500 py-5 rounded-2xl font-black uppercase tracking-widest text-center hover:bg-slate-200 transition-all">
+                Search Again
+            </a>
         </div>
     </div>
 </div>
 
-<% } else { %>
-<div class="text-center text-white">
-    <p class="text-2xl font-bold mb-4">Reservation Not Found.</p>
-    <a href="ViewReservations.jsp" class="text-blue-400 underline">Back to Records</a>
-</div>
-<% } %>
-
+<style> @media print { .no-print { display: none !important; } body { background: white; padding: 0; } .max-w-3xl { box-shadow: none; border: none; width: 100%; max-width: none; } } </style>
 </body>
 </html>
