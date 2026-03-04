@@ -45,4 +45,13 @@ public class ReservationService {
         // FIX: Use updateReservation method instead of getAllReservations
         return reservationDAO.updateReservation(res);
     }
+
+    /**
+     * New Method: Handles the logic for deleting a reservation by its number.
+     * This will be called by DeleteReservationServlet.
+     */
+    public boolean deleteReservation(String resNo) {
+        // This method communicates with the DAO to remove the record
+        return reservationDAO.deleteReservation(resNo);
+    }
 } // End of class

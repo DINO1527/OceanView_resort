@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ReservationDAO {
 
-    // 1. New Reservation saerka (Existing)
+    // 1. Method to add a new Reservation (Existing)
     public boolean addReservation(Reservation res) {
         String sql = "INSERT INTO reservations (res_no, guest_name, contact_no, address, room_type, check_in, check_out) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -31,7 +31,7 @@ public class ReservationDAO {
         }
     }
 
-    // 2. Ella details-aiyum table-il kaatta (Existing)
+    // 2. Method to fetch all reservation details (Existing)
     public List<Reservation> getAllReservations() {
         List<Reservation> list = new ArrayList<>();
         String sql = "SELECT * FROM reservations ORDER BY res_no DESC";
@@ -57,7 +57,7 @@ public class ReservationDAO {
         return list;
     }
 
-    // 3. EDIT prachinaiyai sari seiya: Specific ID moolam data edukka (Existing)
+    // 3. Method to get a specific reservation by ID (Existing)
     public Reservation getReservationByNo(String resNo) {
         Reservation res = null;
         String sql = "SELECT * FROM reservations WHERE res_no = ?";
@@ -84,9 +84,8 @@ public class ReservationDAO {
         return res;
     }
 
-    // 4. Update Reservation details in database (NEW - Fixes the Service Error)
+    // 4. Method to update existing reservation details (Existing)
     public boolean updateReservation(Reservation res) {
-        // SQL query to update details based on reservation number
         String sql = "UPDATE reservations SET guest_name=?, contact_no=?, room_type=?, check_in=?, check_out=? WHERE res_no=?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -99,7 +98,26 @@ public class ReservationDAO {
             stmt.setString(5, res.getCheckOut());
             stmt.setString(6, res.getResNo());
 
-            // Returns true if one or more rows were updated
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 5. New Method: Deletes a reservation from the database by its number.
+     * This fixes the red line error in ReservationService.java.
+     */
+    public boolean deleteReservation(String resNo) {
+        String sql = "DELETE FROM reservations WHERE res_no = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, resNo);
+
+            // Returns true if the record was successfully removed from MySQL
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
