@@ -11,12 +11,13 @@
 
         /* Dropdown options visibility fix */
         select option {
-            background-color: #1e293b; /* Dark background so white text is visible */
+            background-color: #1e293b;
             color: white;
         }
     </style>
 </head>
 <body class="hero-bg min-h-screen flex items-center justify-center p-8">
+
 <%
     String resNo = request.getParameter("id");
     ReservationDAO dao = new ReservationDAO();
@@ -24,6 +25,9 @@
     if(res != null) {
 %>
 <div class="bg-white/10 backdrop-blur-xl p-10 rounded-[40px] border border-white/20 w-full max-w-2xl shadow-2xl">
+
+    <div id="statusMessage" class="hidden w-full p-4 mb-6 rounded-2xl text-center font-bold transition-all duration-500"></div>
+
     <h2 class="text-3xl font-black text-white mb-8">Update Reservation</h2>
     <form action="updateReservation" method="POST" class="space-y-6">
         <input type="hidden" name="resNo" value="<%= res.getResNo() %>">
@@ -49,7 +53,6 @@
 
             <div class="col-span-2">
                 <label class="text-blue-400 text-xs font-bold uppercase tracking-widest block mb-2">Room Type</label>
-                <%-- appearance-none neekappattuள்ளது dropdown arrow therivatharku --%>
                 <select name="roomType" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-blue-500 outline-none">
                     <option value="Single" <%= "Single".equals(res.getRoomType()) ? "selected" : "" %>>Single Room</option>
                     <option value="Double" <%= "Double".equals(res.getRoomType()) ? "selected" : "" %>>Double Room</option>
@@ -58,13 +61,50 @@
             </div>
         </div>
 
-        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-5 rounded-2xl transition-all shadow-xl uppercase tracking-widest">
-            SAVE CHANGES
-        </button>
+        <div class="flex flex-col gap-4">
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-5 rounded-2xl transition-all shadow-xl uppercase tracking-widest">
+                SAVE CHANGES
+            </button>
+
+            <a href="ViewReservations.jsp" class="w-full text-center text-white/60 hover:text-white font-bold py-2 transition-all uppercase tracking-widest text-sm">
+                ← Back to Reservations
+            </a>
+        </div>
     </form>
 </div>
 <% } else { %>
-<p class="text-white text-center font-bold">Reservation not found.</p>
+<div class="text-center">
+    <p class="text-white text-xl font-bold mb-4">Reservation not found.</p>
+    <a href="ViewReservations.jsp" class="text-blue-400 underline">Go back to list</a>
+</div>
 <% } %>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+    const msgBox = document.getElementById('statusMessage');
+
+    if (status === 'success') {
+        msgBox.innerText = "🎉 Changes Saved Successfully!";
+        msgBox.classList.remove('hidden');
+        msgBox.classList.add('bg-green-500/20', 'text-green-400', 'border', 'border-green-500/30');
+
+        // Hide after 3 seconds
+        setTimeout(() => {
+            msgBox.style.opacity = '0';
+            setTimeout(() => {
+                msgBox.classList.add('hidden');
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname + "?id=<%= resNo %>");
+            }, 500);
+        }, 3000);
+
+    } else if (status === 'error' || status === 'exception') {
+        msgBox.innerText = "❌ Error! Could not update reservation.";
+        msgBox.classList.remove('hidden');
+        msgBox.classList.add('bg-red-500/20', 'text-red-400', 'border', 'border-red-500/30');
+    }
+</script>
+
 </body>
 </html>

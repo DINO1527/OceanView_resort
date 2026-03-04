@@ -11,7 +11,6 @@ import java.io.IOException;
 @WebServlet("/updateReservation")
 public class UpdateReservationServlet extends HttpServlet {
 
-
     private ReservationService reservationService = new ReservationService();
 
     @Override
@@ -29,8 +28,8 @@ public class UpdateReservationServlet extends HttpServlet {
             boolean isUpdated = reservationService.updateReservationDetails(resNo, guestName, contactNo, roomType, checkIn, checkOut);
 
             if (isUpdated) {
-                // Success redirect
-                response.sendRedirect(request.getContextPath() + "/ViewReservations.jsp?update=success");
+                // SUCCESS: Redirect back to edit page with status=success to show popup
+                response.sendRedirect(request.getContextPath() + "/editReservation.jsp?id=" + resNo + "&status=success");
             } else {
                 // Error redirect
                 response.sendRedirect(request.getContextPath() + "/editReservation.jsp?id=" + resNo + "&status=error");
