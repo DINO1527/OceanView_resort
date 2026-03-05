@@ -19,22 +19,22 @@
         .modal-active { display: flex !important; animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        /* Custom Transparent Scrollbar - Neenga kettapadi add panniyathu */
+        /* Custom Transparent Scrollbar - */
         ::-webkit-scrollbar {
-            width: 6px; /* Scrollbar width slim-aa irukkum */
+            width: 6px; /* Scrollbar width slim- */
         }
         ::-webkit-scrollbar-track {
-            background: transparent; /* Track-ai transparent aakkiyacha */
+            background: transparent; /* Track-ai transparent  */
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(30, 41, 59, 0.2); /* Scroll handle mattum light-aa theriyum */
+            background: rgba(30, 41, 59, 0.2); /* Scroll  */
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: rgba(30, 41, 59, 0.5); /* Hover pannumbothu mattum thookkala theriyum */
+            background: rgba(30, 41, 59, 0.5); /* Hover  */
         }
 
-        /* Sidebar Scrollbar (Optional: dark theme-kku etha maathiri) */
+        /* Sidebar Scrollbar  */
         aside ::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.1);
         }
@@ -210,5 +210,103 @@
     }
 </script>
 
+</body>
+</html><%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    // --- SESSION CHECK ADDED ---
+    // User login pannala na thaan login page-kku anuppanum
+    // Dashboard-la use panna athe "user" attribute-ai ingayum check panrom
+    if (session.getAttribute("user") == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing History | Ocean View Resort</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+
+        /* Custom Scrollbar for Luxury Look */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(30, 41, 59, 0.2); border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-900 min-h-screen">
+
+<header class="h-24 glass sticky top-0 z-20 flex items-center justify-between px-12 border-b border-slate-200">
+    <div>
+        <h1 class="text-xl font-extrabold text-slate-800 tracking-tight">Billing History</h1>
+        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">
+            Management Console <i class="fas fa-chevron-right mx-2 text-[7px]"></i> Archive
+        </p>
+    </div>
+
+    <div class="flex items-center gap-6">
+        <div class="text-right border-r pr-6 border-slate-200">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Authorized Admin</p>
+            <p class="text-sm font-bold text-blue-600">
+                <%= session.getAttribute("user") %>
+            </p>
+        </div>
+        <a href="dashboard.jsp" class="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-all">
+            <i class="fas fa-arrow-left text-lg"></i>
+        </a>
+    </div>
+</header>
+
+<div class="p-12">
+    <div class="mb-12 flex justify-between items-end">
+        <div>
+            <h2 class="text-4xl font-black text-slate-900 tracking-tight">Financial Records</h2>
+            <p class="text-slate-500 mt-3 text-lg">Archive of all past invoices and guest settlements.</p>
+        </div>
+        <button class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-[3px] shadow-xl shadow-blue-200 hover:-translate-y-1 transition-all">
+            <i class="fas fa-file-export mr-2"></i> Export Report
+        </button>
+    </div>
+
+    <div class="bg-white rounded-[45px] shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-slate-50/50 border-b border-slate-100">
+            <tr>
+                <th class="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Bill ID</th>
+                <th class="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Guest Name</th>
+                <th class="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Date</th>
+                <th class="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Amount</th>
+                <th class="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
+                <th class="px-10 py-8 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Action</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+            <tr class="hover:bg-slate-50/80 transition-all group">
+                <td class="px-10 py-8 font-bold text-slate-900">#INV-8821</td>
+                <td class="px-10 py-8">
+                    <div class="font-bold text-slate-900">Atheef Ahamed</div>
+                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Premium Suite</div>
+                </td>
+                <td class="px-10 py-8 text-sm text-slate-500 font-medium">05 Mar 2026</td>
+                <td class="px-10 py-8 font-black text-emerald-600">LKR 45,000.00</td>
+                <td class="px-10 py-8">
+                    <span class="px-4 py-2 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase tracking-widest rounded-full border border-emerald-100">Paid</span>
+                </td>
+                <td class="px-10 py-8 text-center">
+                    <button class="w-12 h-12 bg-slate-50 rounded-2xl text-slate-400 group-hover:bg-slate-900 group-hover:text-white transition-all shadow-sm">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>
