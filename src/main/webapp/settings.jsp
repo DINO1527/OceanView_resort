@@ -7,88 +7,131 @@
   <title>Staff Settings | Ocean View Resort</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.4); }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at top right, #1e293b, #0f172a);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .input-dark {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      transition: all 0.3s ease;
+    }
+    .input-dark:focus {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #3b82f6;
+      outline: none;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+    }
     .success-animation { animation: slideDown 0.4s ease-out; }
-    @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* Custom Scrollbar for the whole page */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 10px; }
   </style>
 </head>
-<body class="bg-[#f1f5f9] min-h-screen flex items-center justify-center p-6">
+<body class="min-h-screen flex items-center justify-center p-6">
 
-<div class="max-w-md w-full glass-card rounded-[50px] shadow-2xl p-10 relative overflow-hidden">
+<div class="max-w-md w-full glass-card rounded-[45px] shadow-2xl p-10 relative overflow-hidden border border-white/10">
+
+  <div class="absolute -top-24 -left-24 w-48 h-48 bg-blue-600/20 blur-[80px] rounded-full"></div>
 
   <% if(request.getAttribute("message") != null) {
     String msg = (String)request.getAttribute("message");
-    boolean isError = msg.toLowerCase().contains("failed") || msg.toLowerCase().contains("not match");
+    boolean isError = msg.toLowerCase().contains("failed") || msg.toLowerCase().contains("wrong") || msg.toLowerCase().contains("error");
   %>
-  <div class="success-animation mb-6 p-4 <%= isError ? "bg-rose-50 border-rose-100 text-rose-700" : "bg-emerald-50 border-emerald-100 text-emerald-700" %> border rounded-2xl flex items-center gap-4">
-    <div class="w-10 h-10 <%= isError ? "bg-rose-500" : "bg-emerald-500" %> text-white rounded-full flex items-center justify-center shadow-md">
-      <i class="fas <%= isError ? "fa-exclamation" : "fa-check" %>"></i>
+  <div id="statusMessage" class="success-animation mb-8 p-4 <%= isError ? "bg-rose-500/10 border-rose-500/20 text-rose-400" : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" %> border rounded-2xl flex items-center gap-4">
+    <div class="w-10 h-10 <%= isError ? "bg-rose-500" : "bg-emerald-500" %> text-white rounded-full flex items-center justify-center shadow-lg shadow-black/20">
+      <i class="fas <%= isError ? "fa-exclamation-triangle" : "fa-check-double" %>"></i>
     </div>
     <div class="text-[10px] font-black uppercase tracking-widest"><%= msg %></div>
   </div>
   <% } %>
 
   <div class="relative z-10">
-    <div class="text-center mb-10">
-      <form action="UpdateCredentialsServlet" method="POST" enctype="multipart/form-data">
+    <form action="UpdateCredentialsServlet" method="POST" enctype="multipart/form-data" class="text-center">
 
-        <div class="relative inline-block group">
-          <div id="profilePreview" class="w-32 h-32 bg-slate-900 rounded-[45px] flex items-center justify-center text-white text-5xl shadow-2xl mb-4 mx-auto overflow-hidden border-4 border-white transition-all">
-            <i class="fas fa-user-shield"></i>
-          </div>
-
-          <label for="profilePic" class="absolute bottom-2 -right-2 w-10 h-10 bg-blue-600 rounded-2xl border-4 border-white flex items-center justify-center text-white text-xs cursor-pointer hover:bg-blue-700 transition-all shadow-lg" title="Upload Photo">
-            <i class="fas fa-camera"></i>
-            <input type="file" id="profilePic" name="profilePic" class="hidden" accept="image/*" onchange="previewImage(this)">
-          </label>
-
-          <button type="button" onclick="removePhoto()" class="absolute top-2 -right-2 w-10 h-10 bg-rose-500 rounded-2xl border-4 border-white flex items-center justify-center text-white text-xs hover:bg-rose-600 transition-all shadow-lg" title="Remove Photo">
-            <i class="fas fa-trash-can"></i>
-          </button>
+      <div class="relative inline-block mb-8">
+        <div id="profilePreview" class="w-32 h-32 bg-slate-800 rounded-[40px] flex items-center justify-center text-white text-5xl shadow-2xl overflow-hidden border-4 border-white/5 transition-all group-hover:border-blue-500/50">
+          <i class="fas fa-user-shield text-slate-600"></i>
         </div>
 
-        <h2 class="text-2xl font-black text-slate-900 tracking-tight mt-4">
-          <%= session.getAttribute("user") != null ? session.getAttribute("user") : "Staff Member" %>
-        </h2>
-        <p class="text-blue-600 text-[10px] font-black uppercase tracking-[3px] mt-1">Authorized Staff</p>
+        <label for="profilePic" class="absolute bottom-1 -right-2 w-10 h-10 bg-blue-600 rounded-2xl border-4 border-[#0f172a] flex items-center justify-center text-white text-xs cursor-pointer hover:bg-blue-500 transition-all shadow-xl">
+          <i class="fas fa-pencil"></i>
+          <input type="file" id="profilePic" name="profilePic" class="hidden" accept="image/*" onchange="previewImage(this)">
+        </label>
 
-        <div class="mt-10 space-y-5 text-left">
+        <button type="button" onclick="removePhoto()" class="absolute top-1 -right-2 w-10 h-10 bg-slate-800/80 backdrop-blur-md rounded-2xl border-4 border-[#0f172a] flex items-center justify-center text-rose-500 text-xs hover:bg-rose-500 hover:text-white transition-all">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
 
-          <div>
-            <label class="block text-[10px] font-black uppercase tracking-[2px] text-slate-400 mb-2 ml-1">Current Password</label>
-            <input type="password" name="currentPassword" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-medium">
-          </div>
+      <h2 class="text-2xl font-black text-white tracking-tight">
+        <%= session.getAttribute("user") != null ? session.getAttribute("user") : "Staff Admin" %>
+      </h2>
+      <div class="inline-block px-4 py-1 bg-blue-500/10 rounded-full mt-2">
+        <p class="text-blue-400 text-[9px] font-black uppercase tracking-[3px]">Security Settings</p>
+      </div>
 
-          <div>
-            <label class="block text-[10px] font-black uppercase tracking-[2px] text-slate-400 mb-2 ml-1">New Password</label>
-            <input type="password" id="newPassword" name="newPassword" required class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-medium">
-          </div>
-
-          <div>
-            <label class="block text-[10px] font-black uppercase tracking-[2px] text-blue-600 mb-2 ml-1">Confirm New Password</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" required class="w-full p-4 bg-white border border-blue-100 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-medium">
-            <p id="matchError" class="hidden text-[10px] text-rose-500 font-bold mt-2 ml-1 uppercase tracking-widest italic">Passwords do not match!</p>
+      <div class="mt-10 space-y-6 text-left">
+        <div class="space-y-2">
+          <label class="block text-[9px] font-black uppercase tracking-[2px] text-slate-500 ml-1">Identity Verification</label>
+          <div class="relative">
+            <i class="fas fa-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-xs"></i>
+            <input type="password" name="currentPassword" placeholder="Current Password" required
+                   class="input-dark w-full pl-12 pr-4 py-4 rounded-2xl text-sm font-medium">
           </div>
         </div>
 
-        <div class="pt-10 space-y-4">
-          <button type="submit" id="updateBtn" class="w-full py-5 bg-slate-900 text-white rounded-[24px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-2xl shadow-slate-300 text-[11px]">
-            Update Credentials
-          </button>
-
-          <a href="dashboard.jsp" class="block text-center py-2 text-slate-400 font-bold text-[10px] uppercase tracking-widest hover:text-slate-900 transition-all">
-            <i class="fas fa-arrow-left mr-2"></i> Return to Dashboard
-          </a>
+        <div class="space-y-2">
+          <label class="block text-[9px] font-black uppercase tracking-[2px] text-slate-500 ml-1">New Access Key</label>
+          <div class="relative">
+            <i class="fas fa-lock-open absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-xs"></i>
+            <input type="password" id="newPassword" name="newPassword" placeholder="New Password" required
+                   class="input-dark w-full pl-12 pr-4 py-4 rounded-2xl text-sm font-medium">
+          </div>
+          <div class="flex gap-1 mt-2 px-1">
+            <div id="bar1" class="h-1 flex-1 bg-slate-800 rounded-full transition-all"></div>
+            <div id="bar2" class="h-1 flex-1 bg-slate-800 rounded-full transition-all"></div>
+            <div id="bar3" class="h-1 flex-1 bg-slate-800 rounded-full transition-all"></div>
+          </div>
         </div>
-      </form>
-    </div>
+
+        <div class="space-y-2">
+          <label class="block text-[9px] font-black uppercase tracking-[2px] text-blue-500/80 ml-1">Re-type New Key</label>
+          <div class="relative">
+            <i class="fas fa-shield-check absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-xs"></i>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required
+                   class="input-dark w-full pl-12 pr-4 py-4 rounded-2xl text-sm font-medium">
+          </div>
+          <p id="matchError" class="hidden text-[9px] text-rose-500 font-bold mt-2 ml-1 uppercase tracking-widest italic">Keys do not match!</p>
+        </div>
+      </div>
+
+      <div class="pt-10 space-y-5">
+        <button type="submit" id="updateBtn" class="w-full py-5 bg-blue-600 text-white rounded-3xl font-black uppercase tracking-widest hover:bg-blue-500 hover:-translate-y-1 transition-all shadow-xl shadow-blue-900/20 text-[10px]">
+          Update Security Portal
+        </button>
+
+        <a href="dashboard.jsp" class="block text-slate-500 font-bold text-[9px] uppercase tracking-widest hover:text-white transition-all">
+          <i class="fas fa-arrow-left-long mr-2"></i> Return to Station
+        </a>
+      </div>
+    </form>
   </div>
 </div>
 
 <script>
+  // Image Preview
   function previewImage(input) {
     if (input.files && input.files[0]) {
       var reader = new FileReader();
@@ -100,28 +143,54 @@
   }
 
   function removePhoto() {
-    if(confirm("Are you sure you want to remove your profile photo?")) {
-      document.getElementById('profilePreview').innerHTML = '<i class="fas fa-user-shield text-5xl"></i>';
+    if(confirm("Discard profile image?")) {
+      document.getElementById('profilePreview').innerHTML = '<i class="fas fa-user-shield text-slate-600 text-5xl"></i>';
       document.getElementById('profilePic').value = "";
     }
   }
 
+  // Password Validation & Strength
   const newPass = document.getElementById('newPassword');
   const confPass = document.getElementById('confirmPassword');
   const errorMsg = document.getElementById('matchError');
   const btn = document.getElementById('updateBtn');
 
+  newPass.onkeyup = function() {
+    let val = newPass.value;
+    let b1 = document.getElementById('bar1'), b2 = document.getElementById('bar2'), b3 = document.getElementById('bar3');
+
+    // Simple strength logic
+    if(val.length > 0) b1.className = "h-1 flex-1 bg-rose-500 rounded-full";
+    else b1.className = "h-1 flex-1 bg-slate-800 rounded-full";
+
+    if(val.length > 5) b2.className = "h-1 flex-1 bg-amber-500 rounded-full";
+    else b2.className = "h-1 flex-1 bg-slate-800 rounded-full";
+
+    if(val.length > 8) b3.className = "h-1 flex-1 bg-emerald-500 rounded-full";
+    else b3.className = "h-1 flex-1 bg-slate-800 rounded-full";
+  }
+
   confPass.onkeyup = function() {
     if (newPass.value !== confPass.value && confPass.value !== "") {
       errorMsg.classList.remove('hidden');
       btn.disabled = true;
-      btn.classList.add('opacity-50');
+      btn.classList.add('opacity-30');
     } else {
       errorMsg.classList.add('hidden');
       btn.disabled = false;
-      btn.classList.remove('opacity-50');
+      btn.classList.remove('opacity-30');
     }
   }
+
+  // Auto-hide status message after 5 seconds
+  setTimeout(() => {
+    const msg = document.getElementById('statusMessage');
+    if(msg) {
+      msg.style.transition = "0.5s opacity";
+      msg.style.opacity = "0";
+      setTimeout(() => msg.remove(), 500);
+    }
+  }, 5000);
 </script>
 
 </body>
