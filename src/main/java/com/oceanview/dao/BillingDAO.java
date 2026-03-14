@@ -1,27 +1,36 @@
 package com.oceanview.dao;
 
-import com.oceanview.model.Billing;
-import com.oceanview.util.DBConnection;
+
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class BillingDAO {
 
-    public boolean saveInvoice(String resNo, String guestName, long nights, double total) {
-        String sql = "INSERT INTO billing (res_no, guest_name, days_stayed, total_amount) VALUES (?, ?, ?, ?)";
+    public void saveInvoice(String resId, String guestName, int nights, double totalAmount) {
+        // Database credentials
+        String url = "jdbc:mysql://localhost:3306/ocean_view_db"; // Screenshot-DB name 'ocean_view_db'
+        String user = "root";
+        String password = "your_db_password";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO invoices (reservation_id, guest_name, bill_date, total_amount, status) VALUES (?, ?, CURDATE(), ?, 'Paid')";
 
-            stmt.setString(1, resNo);
-            stmt.setString(2, guestName);
-            stmt.setLong(3, nights);
-            stmt.setDouble(4, total);
+        try {
+            // Driver-load -connection- handle
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            try (Connection conn = DriverManager.getConnection(url, user, password);
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            return stmt.executeUpdate() > 0;
+                ps.setString(1, resId);
+                ps.setString(2, guestName);
+                ps.setDouble(3, totalAmount);
+
+                ps.executeUpdate(); // adding the record phpMyAdmin
+                System.out.println("History Updated Successfully for: " + resId);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
     }
 }

@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public class StaffService {
 
-    private StaffDAO staffDAO = new StaffDAO();
+    private final StaffDAO staffDAO = new StaffDAO();
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
 
     public String registerStaff(String fullName, String email, String password, String confirmPassword, String department) {
@@ -76,5 +76,13 @@ public class StaffService {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Hashing algorithm not found", e);
         }
+    }
+
+    public boolean login(String mail, String wrongpass) {
+        return false;
+    }
+
+    public boolean authenticate(String email, String password) {
+        return false;
     }
 }

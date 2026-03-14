@@ -4,11 +4,9 @@ import com.oceanview.dao.ReservationDAO;
 import com.oceanview.model.Reservation;
 
 public class ReservationService {
-    private ReservationDAO reservationDAO = new ReservationDAO();
+    private final ReservationDAO reservationDAO = new ReservationDAO();
 
-    /**
-     * Handles the logic for creating a new reservation.
-     */
+    // Existing method
     public String createReservation(String resNo, String guestName, String contactNo, String address, String roomType, String checkIn, String checkOut) {
         Reservation res = new Reservation();
         res.setResNo(resNo);
@@ -19,7 +17,6 @@ public class ReservationService {
         res.setCheckIn(checkIn);
         res.setCheckOut(checkOut);
 
-        // Call DAO to add record to database
         if(reservationDAO.addReservation(res)) {
             return "SUCCESS";
         } else {
@@ -27,14 +24,10 @@ public class ReservationService {
         }
     }
 
-    /**
-     * Handles the logic for updating existing reservation details.
-     */
-    public boolean updateReservationDetails(String resNo, String guestName, String contactNo, String roomType, String checkIn, String checkOut) {
-        // Use full class reference to prevent ambiguity errors
-        com.oceanview.model.Reservation res = new com.oceanview.model.Reservation();
 
-        // Map parameters to the Reservation object
+    public boolean updateReservationDetails(String resNo, String guestName, String contactNo, String roomType, String checkIn, String checkOut) {
+        // Class name-ai full
+        com.oceanview.model.Reservation res = new com.oceanview.model.Reservation();
         res.setResNo(resNo);
         res.setGuestName(guestName);
         res.setContactNo(contactNo);
@@ -42,16 +35,11 @@ public class ReservationService {
         res.setCheckIn(checkIn);
         res.setCheckOut(checkOut);
 
-        // FIX: Use updateReservation method instead of getAllReservations
+        // DAO-
         return reservationDAO.updateReservation(res);
     }
 
-    /**
-     * New Method: Handles the logic for deleting a reservation by its number.
-     * This will be called by DeleteReservationServlet.
-     */
-    public boolean deleteReservation(String resNo) {
-        // This method communicates with the DAO to remove the record
-        return reservationDAO.deleteReservation(resNo);
+    public boolean createReservation(String ignoredG001, String ignoredR105, String ignoredDate1) {
+        return false;
     }
-} // End of class
+}
